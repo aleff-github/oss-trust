@@ -1,0 +1,105 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "oss-trust",
+  "version": "0.1.3",
+  "description": "Evidence-first open-source dependency due diligence for vulnerabilities, licensing, version drift, deprecation, and maintenance signals.",
+  "author": {
+    "name": "aleff-github",
+    "url": "https://github.com/aleff-github"
+  },
+  "homepage": "https://github.com/aleff-github/oss-trust",
+  "keywords": [
+    "security",
+    "open-source",
+    "dependencies",
+    "supply-chain",
+    "licenses",
+    "OSV"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "OSS Trust",
+        "shortDescription": "Audit open-source dependencies",
+        "longDescription": "Assess supported open-source dependencies in GitHub repositories or exact npm/PyPI package versions using OSV advisories, package-registry metadata, licensing, deprecation, version information, and upstream maintenance evidence. OSS Trust separates confirmed advisory evidence from ordinary maintenance or version differences and preserves runtime/development scope when the manifest supports it. It is a dependency due-diligence tool, not a generic source-code vulnerability scanner, legal opinion, or security guarantee.",
+        "developerName": "aleff-github",
+        "category": "Security",
+        "capabilities": [
+          "Summarize dependency risk",
+          "Assess exact packages",
+          "Separate security from drift"
+        ],
+        "websiteURL": "https://github.com/aleff-github/oss-trust",
+        "defaultPrompt": [
+          "Analyze the dependency security posture of npm/cli.",
+          "Assess npm lodash version 4.17.20 before adoption.",
+          "Check PyPI urllib3 version 1.26.5 for advisories and maintenance signals."
+        ],
+        "supportURL": "https://github.com/aleff-github/oss-trust/issues",
+        "privacyPolicyURL": "https://github.com/aleff-github/oss-trust/blob/main/PRIVACY.md",
+        "termsOfServiceURL": "https://github.com/aleff-github/oss-trust/blob/main/TERMS.md",
+        "brandColor": "#166534",
+        "composerIcon": "./assets/icon.svg",
+        "logo": "./assets/icon.svg"
+      },
+      "onboardingSkill": "./skills/dependency-due-diligence/SKILL.md",
+      "review": {
+        "test_cases": {
+          "positive": [
+            {
+              "description": "Whole-repository dependency and advisory summary",
+              "prompt": "Analyze the public GitHub repository npm/cli and start with a compact whole-repository dependency and known-advisory summary.",
+              "tools_triggered": "summarize_repository",
+              "expected_behavior": "Inventory supported exact dependencies, perform the repository-level OSV summary, and report affected dependencies and advisory evidence without treating version drift as a vulnerability."
+            },
+            {
+              "description": "Detailed first page of repository dependency evidence",
+              "prompt": "Analyze the first 20 supported exact dependencies in npm/cli and include OSV plus package-registry metadata where available.",
+              "tools_triggered": "analyze_repository",
+              "expected_behavior": "Analyze repository dependencies from offset 0 with a maximum page size of 20, return pagination metadata, and keep registry/version signals separate from advisories."
+            },
+            {
+              "description": "Explicit paginated repository analysis",
+              "prompt": "Analyze the next page of supported dependencies in npm/cli starting at dependency offset 20.",
+              "tools_triggered": "analyze_repository",
+              "expected_behavior": "Analyze the repository page starting at offset 20 and return the page's advisory and registry evidence with next-page metadata when more dependencies remain."
+            },
+            {
+              "description": "Exact npm package assessment",
+              "prompt": "Assess npm package lodash version 4.17.20 for known OSV advisories, declared license, version metadata, deprecation, and upstream maintenance evidence.",
+              "tools_triggered": "assess_package",
+              "expected_behavior": "Assess exactly lodash 4.17.20, report detailed advisory evidence returned by OSV and registry/upstream metadata, and distinguish confirmed security findings from ordinary maintenance signals."
+            },
+            {
+              "description": "Exact PyPI package assessment",
+              "prompt": "Assess PyPI package urllib3 version 1.26.5 for known advisories, declared license, version metadata, and upstream maintenance signals.",
+              "tools_triggered": "assess_package",
+              "expected_behavior": "Assess exactly urllib3 1.26.5 using OSV and PyPI metadata, report available evidence, and avoid claiming the package is secure merely because a particular signal is absent."
+            }
+          ],
+          "negative": [
+            {
+              "description": "Unsupported source-code vulnerability scan",
+              "prompt": "Find SQL injection vulnerabilities in the source code of npm/cli."
+            },
+            {
+              "description": "Unsupported repository modification",
+              "prompt": "Upgrade every vulnerable dependency in my GitHub repository and push the changes."
+            },
+            {
+              "description": "Unsupported binding legal conclusion",
+              "prompt": "Guarantee that every dependency license in this repository is legally compatible with my product."
+            }
+          ]
+        },
+        "commerce": false,
+        "commerce_description": "OSS Trust is read-only and does not sell products, process payments, or modify repositories."
+      },
+      "publication": {
+        "release_notes": "Initial public release of OSS Trust 0.1.3 with repository-level advisory summaries, exact npm/PyPI package assessment, maintenance and license signals, and GitHub rate-limit fallback behavior."
+      }
+    }
+  },
+  "repository": "https://github.com/aleff-github/oss-trust",
+  "license": "GPL-3.0-only"
+}

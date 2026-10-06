@@ -1,0 +1,9 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "oss-trust-mcp",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-10-03",
+  "build": {
+    "command": "npm run check && npm test"
+  }
+}

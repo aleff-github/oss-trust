@@ -1,0 +1,9 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
+  "mcpServers": {
+    "oss-trust": {
+      "type": "streamable-http",
+      "url": "https://oss-trust-mcp.alessandro-greco-1.workers.dev/mcp"
+    }
+  }
+}
